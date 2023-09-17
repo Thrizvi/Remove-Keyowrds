@@ -1,0 +1,43 @@
+var mc = new GlideRecord('u_infra_use_cases');
+mc.addQuery('sys_id', 'ccd77a85871cf5508c8c33350cbb3527');
+mc.query();
+if (mc.next()) {
+    var Out = mc.getValue('u_new_value');
+    gs.log("-----------------" + Out);
+    
+    var lines = Out.split('\n');
+    var modifiedLines = [];
+    
+    for (var i = 0; i < lines.length; i++) {
+        var line = lines[i];
+        var removeLine = false;
+
+        if (line.indexOf("ether") !== -1) {
+          //  gs.log('Out In EtherIndex ' + line);
+            removeLine = true;
+        } else if (line.indexOf("Overall Status") !== -1) {
+          //  gs.log('Out In overallStatusIndex ' + line);
+            removeLine = true;
+        } else if (line.indexOf("System Purpose Status") !== -1) {
+          //  gs.log('Out In systemPurposeStatus ' + line);
+            removeLine = true;
+        } else if (line.indexOf("Content Access Mode") !== -1) {
+          //  gs.log('Out In Content Access Mode ' + line);
+            removeLine = true;
+        }
+        
+        else if (line.indexOf("[INFO] subscription-manager:") !== -1) {
+          //  gs.log('Out In [INFO] subscription-manager: ' + line);
+            removeLine = true;
+        }
+        if (!removeLine) {
+            modifiedLines.push(line);
+        }
+    }
+    
+    Out = modifiedLines.join('\n');
+    gs.log('Modified Out:\n' + Out);
+} else {
+    gs.log('Not found');
+}
+
